@@ -24,13 +24,18 @@ public class HookShot : ObjectBase {
 	[SerializeField]
 	private float m_Speed;              // 速度
 	private Transform m_PlayerTrandform;// プレイヤーのTransform
-										// Use this for initialization
+	private Rigidbody rigidBody;        // 銛のRigitbody
+	[SerializeField]
+	private float ShotPower;			// 銛を打ち出す強さ
+
+	// Use this for initialization
 	void Start() {
 		m_OrderNumber = 0;
 		ObjectManager.Instance.RegistrationList(this, m_OrderNumber);
 		m_CoolTime = 0;
 		m_UseHook = false;
 		m_isHit = false;
+		rigidBody = GetComponent<Rigidbody>();
 	}
 
 	public override void Execute(float deltaTime) {
@@ -38,6 +43,8 @@ public class HookShot : ObjectBase {
 
 		} else if(m_isHit) {
 
+		} else {
+			m_CoolTime -= deltaTime;
 		}
 	}
 
@@ -55,6 +62,7 @@ public class HookShot : ObjectBase {
 		m_CoolTime = m_CoolTimeDefault;
 		m_UseHook = true;
 		m_isHit = false;
+		rigidBody.AddForce(player.forward * ShotPower);
 	}
 
 	public void OnCollisionEnter(Collision obj) {

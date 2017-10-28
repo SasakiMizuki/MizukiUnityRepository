@@ -17,7 +17,7 @@ public class MainCamera : ObjectBase {
 	}
 
 	public override void Execute(float deltaTime) {
-		transform.rotation = Quaternion.Slerp(transform.rotation, m_PlayerObj.transform.rotation, deltaTime * m_CameraMoveSpeed);
+		transform.rotation = Quaternion.Slerp(transform.rotation, m_PlayerObj.transform.rotation, Mathf.Clamp(deltaTime / m_CameraMoveSpeed, 0.0f, 1.0f));
 		m_PlayerForward = m_PlayerObj.transform.forward;
 		transform.position = m_PlayerObj.transform.position - m_PlayerForward * 5.0f;
 

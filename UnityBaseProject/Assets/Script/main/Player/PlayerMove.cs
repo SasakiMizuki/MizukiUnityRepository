@@ -24,8 +24,8 @@ public class PlayerMove : ObjectBase {
 		//pos.x = Mathf.Cos(m_MainCamera.transform.rotation.y) * Mathf.Cos(m_MainCamera.transform.rotation.x) * m_PlayerSpeed * MultiInput.Instance.GetLeftStickAxis().y;
 		//pos.y = Mathf.Sin(m_MainCamera.transform.rotation.y) * Mathf.Cos(m_MainCamera.transform.rotation.x) * m_PlayerSpeed * MultiInput.Instance.GetLeftStickAxis().y;
 		//pos.z = Mathf.Sin(m_MainCamera.transform.rotation.y) * Mathf.Cos(m_MainCamera.transform.rotation.x) * m_PlayerSpeed * MultiInput.Instance.GetLeftStickAxis().y;
-		pos += m_MainCamera.transform.forward * m_PlayerMoveSpeed * MultiInput.Instance.GetLeftStickAxis().y * deltaTime;
-		pos += m_MainCamera.transform.right * m_PlayerMoveSpeed * MultiInput.Instance.GetLeftStickAxis().x * deltaTime;
+		pos += transform.forward * m_PlayerMoveSpeed * MultiInput.Instance.GetLeftStickAxis().y * deltaTime;
+		pos += transform.right * m_PlayerMoveSpeed * MultiInput.Instance.GetLeftStickAxis().x * deltaTime;
 		transform.position = pos;
 
 		transform.Rotate(new Vector3(

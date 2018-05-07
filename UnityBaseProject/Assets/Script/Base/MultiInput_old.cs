@@ -58,8 +58,9 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 
-public class MultiInput : SingletonMonoBehaviour<MultiInput> {
+public class MultiInput_old : SingletonMonoBehaviour<MultiInput> {
 	public enum CONTROLLER_BUTTON {
 		CLOSS_UP,        // 十字キー上
 		CLOSS_DOWN,      // 十字キー下
@@ -134,7 +135,6 @@ public class MultiInput : SingletonMonoBehaviour<MultiInput> {
 	private bool[] BeforeClossButton;
 	private bool[] BeforeStick;
 	private bool[] NowStick;
-    private bool[] BeforeL2R2;
 
 	[SerializeField]
 	private string KeyBoardDataFileName = "keyData";
@@ -149,16 +149,16 @@ public class MultiInput : SingletonMonoBehaviour<MultiInput> {
 			{CONTROLLER_BUTTON.CLOSS_DOWN, KeyCode.Joystick1Button19},
 			{CONTROLLER_BUTTON.CLOSS_LEFT, KeyCode.Joystick1Button19},
 			{CONTROLLER_BUTTON.CLOSS_RIGHT,KeyCode.Joystick1Button19},
-			{CONTROLLER_BUTTON.CIRCLE,     KeyCode.Joystick1Button1},
-			{CONTROLLER_BUTTON.CANCEL,     KeyCode.Joystick1Button0},
-			{CONTROLLER_BUTTON.TRIANGLE,   KeyCode.Joystick1Button3},
-			{CONTROLLER_BUTTON.SQUARE,     KeyCode.Joystick1Button2},
+			{CONTROLLER_BUTTON.CIRCLE,     KeyCode.Joystick1Button3},
+			{CONTROLLER_BUTTON.CANCEL,     KeyCode.Joystick1Button2},
+			{CONTROLLER_BUTTON.TRIANGLE,   KeyCode.Joystick1Button1},
+			{CONTROLLER_BUTTON.SQUARE,     KeyCode.Joystick1Button0},
 			{CONTROLLER_BUTTON.RIGHT_1,    KeyCode.Joystick1Button5},
-			{CONTROLLER_BUTTON.RIGHT_2,    KeyCode.Joystick1Button19},
-			{CONTROLLER_BUTTON.RIGHT_3,    KeyCode.Joystick1Button9},
+			{CONTROLLER_BUTTON.RIGHT_2,    KeyCode.Joystick1Button7},
+			{CONTROLLER_BUTTON.RIGHT_3,    KeyCode.Joystick1Button12},
 			{CONTROLLER_BUTTON.LEFT_1,     KeyCode.Joystick1Button4},
-			{CONTROLLER_BUTTON.LEFT_2,     KeyCode.Joystick1Button10},
-			{CONTROLLER_BUTTON.LEFT_3,     KeyCode.Joystick1Button8},
+			{CONTROLLER_BUTTON.LEFT_2,     KeyCode.Joystick1Button6},
+			{CONTROLLER_BUTTON.LEFT_3,     KeyCode.Joystick1Button11},
 			{CONTROLLER_BUTTON.RIGHTSTICK_UP,      KeyCode.Joystick1Button19},
 			{CONTROLLER_BUTTON.RIGHTSTICK_DOWN,    KeyCode.Joystick1Button19},
 			{CONTROLLER_BUTTON.RIGHTSTICK_LEFT,    KeyCode.Joystick1Button19},
@@ -167,14 +167,13 @@ public class MultiInput : SingletonMonoBehaviour<MultiInput> {
 			{CONTROLLER_BUTTON.LEFTSTICK_DOWN,     KeyCode.Joystick1Button19},
 			{CONTROLLER_BUTTON.LEFTSTICK_LEFT,     KeyCode.Joystick1Button19},
 			{CONTROLLER_BUTTON.LEFTSTICK_RIGHT,    KeyCode.Joystick1Button19},
-			{CONTROLLER_BUTTON.START,              KeyCode.Joystick1Button7},
-			{CONTROLLER_BUTTON.SELECT,             KeyCode.Joystick1Button6},
+			{CONTROLLER_BUTTON.START,              KeyCode.Joystick1Button10},
+			{CONTROLLER_BUTTON.SELECT,             KeyCode.Joystick1Button9},
 		};
 
 		BeforeClossButton = new bool[4];
 		BeforeStick = new bool[8];  // 0を左スティックの上方向として時計回りに1,2,3。4以降は右スティックで同じく時計回りに5,6,7。
 		NowStick = new bool[8];
-        BeforeL2R2 = new bool[2];
 	}
 
 	// Update is called once per frame   
@@ -200,10 +199,8 @@ public class MultiInput : SingletonMonoBehaviour<MultiInput> {
 		}
 		for(i = 0; i < 8; i++) {
 			BeforeStick[i] = NowStick[i];
-        }
-        BeforeL2R2[0] = GetPressButton(CONTROLLER_BUTTON.LEFT_2);
-        BeforeL2R2[1] = GetPressButton(CONTROLLER_BUTTON.RIGHT_2);
-    }
+		}
+	}
 
 	/// <summary>
 	/// キーボードデータの取得
@@ -309,83 +306,61 @@ public class MultiInput : SingletonMonoBehaviour<MultiInput> {
 	// 以下コメントなし。
 
 	public bool GetPressButton(CONTROLLER_BUTTON button) {
-		if(button > CONTROLLER_BUTTON.CLOSS_RIGHT && 
-            button != CONTROLLER_BUTTON.RIGHT_2 && 
-            button != CONTROLLER_BUTTON.LEFT_2) {
+		if(button > CONTROLLER_BUTTON.CLOSS_RIGHT) {
 			if(Input.GetKey(keyDictionary[button]) || Input.GetKey(padDictionary[button])) {
 				return true;
 			}
 		} else {
 			if(button == CONTROLLER_BUTTON.CLOSS_UP) {
-				if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("Vertical") < -0.6) {
+				if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("GamePadVertical") == 1.0f) {
 					return true;
 				}
 			} else if(button == CONTROLLER_BUTTON.CLOSS_DOWN) {
-				if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("Vertical") > 0.6f) {
+				if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("GamePadVertical") == -1.0f) {
 					return true;
 				}
-            } else if(button == CONTROLLER_BUTTON.CLOSS_RIGHT) {
-                if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("Horizontal") < -0.6f) {
-                    return true;
-                }
-            } else if(button == CONTROLLER_BUTTON.CLOSS_LEFT) {
-                if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("Horizontal") > 0.6f) {
-                    return true;
-                }
-            } else if(button == CONTROLLER_BUTTON.LEFT_2) {
-                if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("GamePadL2R2") > 0.8f) {
-                    return true;
-                }
-            } else if(button == CONTROLLER_BUTTON.RIGHT_2) {
-                if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("GamePadL2R2") < -0.8f) {
-                    return true;
-                }
-            }
-        }
+			} else if(button == CONTROLLER_BUTTON.CLOSS_RIGHT) {
+				if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("GamePadHorizontal") == 1.0f) {
+					return true;
+				}
+			} else {
+				if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("GamePadHorizontal") == -1.0f) {
+					return true;
+				}
+			}
+		}
 
 
 		return false;
 	}
 	public bool GetTriggerButton(CONTROLLER_BUTTON button) {
-		if(button > CONTROLLER_BUTTON.CLOSS_RIGHT &&
-            button != CONTROLLER_BUTTON.RIGHT_2 &&
-            button != CONTROLLER_BUTTON.LEFT_2) {
+		if(button > CONTROLLER_BUTTON.CLOSS_RIGHT) {
 			if(Input.GetKeyDown(keyDictionary[button]) || Input.GetKeyDown(padDictionary[button])) {
 				return true;
 			}
 		} else {
 			if(button == CONTROLLER_BUTTON.CLOSS_UP) {
-				if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("Vertical") < -0.6f) {
+				if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("GamePadVertical") == 1.0f) {
 					if(!BeforeClossButton[0])
 						return true;
 				}
 			} else if(button == CONTROLLER_BUTTON.CLOSS_DOWN) {
-				if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("Vertical") > 0.6f) {
+				if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("GamePadVertical") == -1.0f) {
 					if(!BeforeClossButton[1])
 						return true;
 				}
 			} else if(button == CONTROLLER_BUTTON.CLOSS_RIGHT) {
-				if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("Horizontal") < -0.6f) {
+				if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("GamePadHorizontal") == 1.0f) {
 					if(!BeforeClossButton[3])
 						return true;
 				}
-			} else if(button == CONTROLLER_BUTTON.CLOSS_LEFT) {
-				if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("Horizontal") > 0.6f) {
+			} else {
+				if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("GamePadHorizontal") == -1.0f) {
 					if(!BeforeClossButton[2])
 						return true;
 				}
-            } else if(button == CONTROLLER_BUTTON.LEFT_2) {
-                if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("GamePadL2R2") > 0.8f) {
-                    if(!BeforeL2R2[0])
-                        return true;
-                }
-            } else if(button == CONTROLLER_BUTTON.RIGHT_2) {
-                if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("GamePadL2R2") < -0.8f) {
-                    if(!BeforeL2R2[1])
-                    return true;
-                }
-            }
-        }
+			}
+		}
 
 		return false;
 	}
@@ -393,45 +368,33 @@ public class MultiInput : SingletonMonoBehaviour<MultiInput> {
 		if(Input.GetKeyUp(keyDictionary[button]) || Input.GetKeyUp(padDictionary[button])) {
 			return true;
 		}
-		if(button > CONTROLLER_BUTTON.CLOSS_RIGHT &&
-            button != CONTROLLER_BUTTON.RIGHT_2 &&
-            button != CONTROLLER_BUTTON.LEFT_2) {
+		if(button > CONTROLLER_BUTTON.CLOSS_RIGHT) {
 			if(Input.GetKey(keyDictionary[button]) || Input.GetKey(padDictionary[button])) {
 				return true;
 			}
 		} else {
 			if(button == CONTROLLER_BUTTON.CLOSS_UP) {
-				if(!Input.GetKey(keyDictionary[button]) && !( Input.GetAxisRaw("Vertical") < -0.6f )) {
+				if(!Input.GetKey(keyDictionary[button]) && !( Input.GetAxisRaw("GamePadVertical") == 1.0f )) {
 					if(BeforeClossButton[0])
 						return true;
 				}
 			} else if(button == CONTROLLER_BUTTON.CLOSS_DOWN) {
-				if(!Input.GetKey(keyDictionary[button]) && !( Input.GetAxisRaw("Vertical") > 0.6f )) {
+				if(!Input.GetKey(keyDictionary[button]) && !( Input.GetAxisRaw("GamePadVertical") == -1.0f )) {
 					if(BeforeClossButton[1])
 						return true;
 				}
 			} else if(button == CONTROLLER_BUTTON.CLOSS_RIGHT) {
-				if(!Input.GetKey(keyDictionary[button]) && !( Input.GetAxisRaw("Horizontal") < -0.6f )) {
+				if(!Input.GetKey(keyDictionary[button]) && !( Input.GetAxisRaw("GamePadHorizontal") == 1.0f )) {
 					if(BeforeClossButton[3])
 						return true;
 				}
-			} else if(button == CONTROLLER_BUTTON.CLOSS_LEFT) {
-				if(!Input.GetKey(keyDictionary[button]) && !( Input.GetAxisRaw("Horizontal") > 0.6f )) {
+			} else {
+				if(!Input.GetKey(keyDictionary[button]) && !( Input.GetAxisRaw("GamePadHorizontal") == -1.0f )) {
 					if(BeforeClossButton[2])
 						return true;
 				}
-            } else if(button == CONTROLLER_BUTTON.LEFT_2) {
-                if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("GamePadL2R2") > 0.8f) {
-                    if(BeforeL2R2[0])
-                        return true;
-                }
-            } else if(button == CONTROLLER_BUTTON.RIGHT_2) {
-                if(Input.GetKey(keyDictionary[button]) || Input.GetAxisRaw("GamePadL2R2") < -0.8f) {
-                    if(BeforeL2R2[1])
-                        return true;
-                }
-            }
-        }
+			}
+		}
 
 		return false;
 	}
@@ -442,14 +405,14 @@ public class MultiInput : SingletonMonoBehaviour<MultiInput> {
 		} else if(GetPressButton(CONTROLLER_BUTTON.LEFTSTICK_LEFT)) {
 			vec.x = -1.0f;
 		} else {
-			vec.x = Input.GetAxisRaw("GamePadHorizontal");
+			vec.x = Input.GetAxisRaw("Horizontal");
 		}
 		if(GetPressButton(CONTROLLER_BUTTON.LEFTSTICK_UP)) {
 			vec.y = 1.0f;
 		} else if(GetPressButton(CONTROLLER_BUTTON.LEFTSTICK_DOWN)) {
 			vec.y = -1.0f;
 		} else {
-			vec.y = -(Input.GetAxisRaw("GamePadVertical"));
+			vec.y = Input.GetAxisRaw("Vertical");
 		}
 		return vec;
 	}
@@ -467,32 +430,12 @@ public class MultiInput : SingletonMonoBehaviour<MultiInput> {
 		} else if(GetPressButton(CONTROLLER_BUTTON.RIGHTSTICK_DOWN)) {
 			vec.y = -1.0f;
 		} else {
-			vec.y = -(Input.GetAxisRaw("VerticalRight"));
+			vec.y = Input.GetAxisRaw("VerticalRight");
 		}
 
 		return vec;
 	}
 	public bool GetTriggerStickAxis(STICK_AXIS stickAxis) {
 		return !BeforeStick[(int)stickAxis] && NowStick[(int)stickAxis] ? true : false;
-    }
-    public float GetL2Value() {
-        float value = 0.0f;
-        if(GetPressButton(CONTROLLER_BUTTON.LEFT_2)) {
-            value = 1.0f;
-        } else {
-            if(Input.GetAxisRaw("GamePadL2R2") > 0)
-                value = Input.GetAxisRaw("GamePadL2R2");
-        }
-        return value;
-    }
-    public float GetR2Value() {
-        float value = 0.0f;
-        if(GetPressButton(CONTROLLER_BUTTON.RIGHT_2)) {
-            value = 1.0f;
-        } else {
-            if(Input.GetAxisRaw("GamePadL2R2") < 0)
-                value = -(Input.GetAxisRaw("GamePadL2R2"));
-        }
-        return value;
-    }
+	}
 }

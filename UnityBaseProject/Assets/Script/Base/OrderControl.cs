@@ -34,23 +34,43 @@ public class OrderControl : MonoBehaviour {
 		for(int i = 0; i < m_ObjList.Count; i++) {
 			m_ObjList[i].Execute(deltaTime);
 		}
-	}
+    }
 
-	/// <summary>
-	/// 後更新
-	/// </summary>
-	/// <param name="deltaTime">デルタタイム</param>
-	public void LateExecute(float deltaTime) {
-		for(int i = 0; i < m_ObjList.Count; i++) {
-			m_ObjList[i].LateExecute(deltaTime);
-		}
-	}
+    /// <summary>
+    /// 後更新
+    /// </summary>
+    /// <param name="deltaTime">デルタタイム</param>
+    public void LateExecute(float deltaTime) {
+        for(int i = 0; i < m_ObjList.Count; i++) {
+            m_ObjList[i].LateExecute(deltaTime);
+        }
+    }
 
-	/// <summary>
-	/// オブジェクトの追加
-	/// </summary>
-	/// <param name="newObj">追加オブジェクト</param>
-	public void AddList(ObjectBase newObj) {
+    /// <summary>
+    /// 後更新
+    /// </summary>
+    /// <param name="deltaTime">デルタタイム</param>
+    public void PauseExecute(float deltaTime) {
+        for(int i = 0; i < m_ObjList.Count; i++) {
+            m_ObjList[i].PauseExecute(deltaTime);
+        }
+    }
+
+    /// <summary>
+    /// ポーズ時実行
+    /// </summary>
+    /// <param name="deltaTime">デルタタイム</param>
+    public void OnPauseExecute() {
+        for(int i = 0; i < m_ObjList.Count; i++) {
+            m_ObjList[i].OnPause();
+        }
+    }
+
+    /// <summary>
+    /// オブジェクトの追加
+    /// </summary>
+    /// <param name="newObj">追加オブジェクト</param>
+    public void AddList(ObjectBase newObj) {
 		m_ObjList.Add(newObj);
 	}
 }

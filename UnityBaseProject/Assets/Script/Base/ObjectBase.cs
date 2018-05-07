@@ -10,6 +10,10 @@
 //	
 //==================================================
 //	作成日：2017/03/12
+//
+//==================================================
+//  更新
+//  2018/05/08：停止時更新
 //	
 //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/ 
 using System.Collections;
@@ -18,9 +22,23 @@ using UnityEngine;
 
 public class ObjectBase : MonoBehaviour {
 	protected int m_OrderNumber = 0;
+    protected int m_ListToNumber = 0;
+    protected float m_DeltaTime = 0;    // 他の関数で使いたいときに入れる用
 
-	// Use this for initialization
-	void Start () {
+    public int ListToNumber {
+        get
+        {
+            return m_ListToNumber;
+        }
+
+        set
+        {
+            m_ListToNumber = value;
+        }
+    }
+
+    // Use this for initialization
+    void Start () {
 		Debug.Log("とおった");
         ObjectManager.Instance.RegistrationList(this,m_OrderNumber);
 	}
@@ -33,15 +51,30 @@ public class ObjectBase : MonoBehaviour {
 
     }
 
-	/// <summary>
-	/// 後更新
-	/// </summary>
-	/// <param name="deltaTime">デルタタイム</param>
+    /// <summary>
+    /// 後更新
+    /// </summary>
+    /// <param name="deltaTime">デルタタイム</param>
     public virtual void LateExecute(float deltaTime) {
 
     }
+    
+    /// <summary>
+    /// ポーズ時更新
+    /// </summary>
+    /// <param name="deltaTime">デルタタイム</param>
+    public virtual void PauseExecute(float unscaledDeltaTime) {
 
-	/*
+    }
+
+    /// <summary>
+    /// ポーズになったタイミングで実行
+    /// </summary>
+    public virtual void OnPause() {
+
+    }
+
+    /*
 	public void ChangeOrderNumber(int OrderNumber) {
 
 	}

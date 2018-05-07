@@ -20,6 +20,7 @@ public class ObjectManager : SingletonMonoBehaviour<ObjectManager> {
 	private List<OrderControl> m_OrderList;
 	[SerializeField]
 	private OrderControl m_OrderControlPrefab;
+    private bool m_isPause = false;
 
 	// Use this for initialization
 	void Start () {
@@ -29,12 +30,19 @@ public class ObjectManager : SingletonMonoBehaviour<ObjectManager> {
 	// Update is called once per frame
 	void Update () {
         int i;
-        float deltaTime = Time.deltaTime;
-        for(i = 0; i < m_OrderList.Count; i++) {
-			m_OrderList[i].Execute(deltaTime);
-        }
-        for(i = 0; i < m_OrderList.Count; i++) {
-			m_OrderList[i].LateExecute(deltaTime);
+        if(m_isPause) {
+            float deltaTime = Time.unscaledDeltaTime;
+            for(i = 0; i < m_OrderList.Count; i++) {
+                m_OrderList[i].PauseExecute(deltaTime);
+            }
+        } else {
+            float deltaTime = Time.deltaTime;
+            for(i = 0; i < m_OrderList.Count; i++) {
+                m_OrderList[i].Execute(deltaTime);
+            }
+            for(i = 0; i < m_OrderList.Count; i++) {
+                m_OrderList[i].LateExecute(deltaTime);
+            }
         }
 	}
 
@@ -52,5 +60,22 @@ public class ObjectManager : SingletonMonoBehaviour<ObjectManager> {
 			}
 		}
 		m_OrderList[OrderNumber].AddList(newObj);
+    }
+
+    /// <summary>
+    /// ポーズの設定
+    /// </summary>
+    /// <param name="pause"></param>
+    public void SetPause(bool pause) {
+        if(!m_isPause && pause) {
+            for(int i = 0; i < m_OrderList.Count; i++) {
+                m_OrderList[i].OnPauseExecute();
+            }
+            m_isPause = true;
+            Time.timeScale = 0;
+        }else if(!pause) {
+            m_isPause = false;
+            Time.timeScale = 1.0f;
+        }
     }
 }

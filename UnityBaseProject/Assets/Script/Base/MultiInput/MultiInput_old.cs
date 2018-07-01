@@ -177,7 +177,7 @@ public class MultiInput_old : SingletonMonoBehaviour<MultiInput> {
 	}
 
 	// Update is called once per frame   
-	void Update() {
+	void Execute() {
 		NowStick[0] = GetLeftStickAxis().y > 0.8f ? true : false;
 		NowStick[1] = GetLeftStickAxis().x > 0.8f ? true : false;
 		NowStick[2] = GetLeftStickAxis().y < -0.8f ? true : false;
@@ -191,7 +191,7 @@ public class MultiInput_old : SingletonMonoBehaviour<MultiInput> {
 	/// <summary>
 	/// トリガー系の判定用
 	/// </summary>
-	void LateUpdate() {
+	void LateExecute() {
 		int i;
 		// 現在フレームで入力されているかの確認(TriggerとRelease用)
 		for(i = 0; i < BeforeClossButton.Length; i++) {

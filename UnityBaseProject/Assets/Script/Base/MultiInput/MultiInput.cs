@@ -139,8 +139,14 @@ public class MultiInput : SingletonMonoBehaviour<MultiInput> {
 	[SerializeField]
 	private string KeyBoardDataFileName = "keyData";
 
-	new void Awake() {
-		ReadingKeyBoardData();    // データ読み込み
+    void Start() {
+    }
+
+    new void Awake() {
+        m_OrderNumber = 0;
+        ObjectManager.Instance.RegistrationList(this, m_OrderNumber);
+
+        ReadingKeyBoardData();    // データ読み込み
 		AttachKeyBoard();
 		// げーむぱっど(Joystick1Button19は対応するボタンがなかったので仮で入れてあるものです)
 		padDictionary = new Dictionary<CONTROLLER_BUTTON, KeyCode>()
@@ -177,9 +183,9 @@ public class MultiInput : SingletonMonoBehaviour<MultiInput> {
         BeforeL2R2 = new bool[2];
 	}
 
-	// Update is called once per frame   
-	void Update() {
-		NowStick[0] = GetLeftStickAxis().y > 0.8f ? true : false;
+    // Update is called once per frame   
+    public override void Execute(float deltaTime) {
+        NowStick[0] = GetLeftStickAxis().y > 0.8f ? true : false;
 		NowStick[1] = GetLeftStickAxis().x > 0.8f ? true : false;
 		NowStick[2] = GetLeftStickAxis().y < -0.8f ? true : false;
 		NowStick[3] = GetLeftStickAxis().x < -0.8f ? true : false;
@@ -189,10 +195,10 @@ public class MultiInput : SingletonMonoBehaviour<MultiInput> {
 		NowStick[7] = GetRightStickAxis().x < -0.8f ? true : false;
 	}
 
-	/// <summary>
-	/// トリガー系の判定用
-	/// </summary>
-	void LateUpdate() {
+    /// <summary>
+    /// トリガー系の判定用
+    /// </summary>
+    public override void LateExecute(float deltaTime) {
 		int i;
 		// 現在フレームで入力されているかの確認(TriggerとRelease用)
 		for(i = 0; i < BeforeClossButton.Length; i++) {

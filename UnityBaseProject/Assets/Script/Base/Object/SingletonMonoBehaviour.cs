@@ -10,7 +10,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 
-public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour {
+public abstract class SingletonMonoBehaviour<T> : ObjectBase where T : ObjectBase {
 
     protected static T instance;
     public static T Instance

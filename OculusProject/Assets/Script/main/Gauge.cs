@@ -23,6 +23,16 @@ public class Gauge : ObjectBase {
     [SerializeField]
     private float gaugeUpRate;
     private float gaugePropotion = 0.01f;
+    public float GaugePropotion {
+        get
+        {
+            return gaugePropotion;
+        }
+        set
+        {
+            gaugePropotion = value;
+        }
+    }
     [SerializeField]
     private Image gaugeUpImage;
 
@@ -52,13 +62,13 @@ public class Gauge : ObjectBase {
 	}
 	
 	public override void Execute(float deltaTime) {
-        //if(isSet) {
+        if(isSet) {
             gaugePropotion += ( gaugePropotion * gaugeUpRate ) * deltaTime;
             if(gaugePropotion >= 1.0f) {
                 gaugePropotion = 0.01f;
             }
             gaugeUpImage.fillAmount = gaugePropotion;
-        //}
+        }
 	}
 
 	public override void LateExecute(float deltaTime) {

@@ -21,6 +21,16 @@ public class ObjectUsingChecker : ObjectBase {
         public GameObject ObjBody;
         public bool isUsing;
 		public int NumberOfList;
+
+        public IEnumerator AutoDelete(float waitTime) {
+            yield return new WaitForSeconds(waitTime);
+
+            isUsing = false;
+            NumberOfList = -1;
+            //obj.ObjBody = default(T);
+            //Destroy(obj.ObjBody);
+            ObjBody.SetActive(false);
+        }
 	}
 	private List<ObjectData> m_ObjList = new List<ObjectData>();
     private GameObject ObjectParent = null;
@@ -44,13 +54,14 @@ public class ObjectUsingChecker : ObjectBase {
     /// </summary>
     /// <param name="cloneObj">生成するオブジェクト(プレハブ)</param>
     /// <returns>生成したオブジェクト</returns>
-	public ObjectData NewObjGet(GameObject cloneObj = null) {
+	public ObjectData GetNewObj(GameObject cloneObj = null) {
 		int i;
         // 未使用のオブジェクトを発見したらそれを使用する
 		for(i = 0; i < m_ObjList.Count; i++) { 
 			if(!m_ObjList[i].isUsing) {
 				ObjectData clone = m_ObjList[i];
                 clone.ObjBody.SetActive(true);
+                clone.ObjBody.transform.localPosition = Vector3.zero;
                 //clone.ObjBody = cloneObj;
                 clone.isUsing = true;
 				clone.NumberOfList = i;
@@ -67,6 +78,7 @@ public class ObjectUsingChecker : ObjectBase {
         if(ObjectParent != null) {
             obj.ObjBody.transform.parent = ObjectParent.transform;
         }
+        obj.ObjBody.transform.localPosition = Vector3.zero;
         obj.isUsing = true;
 		obj.NumberOfList = i;
 		m_ObjList.Add(obj);

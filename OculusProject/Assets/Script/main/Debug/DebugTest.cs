@@ -39,15 +39,16 @@ public class DebugTest : SingletonMonoBehaviour<DebugTest> {
 	}
 	
 	public override void Execute(float deltaTime) {
-        accText.text = "accAccText:" + OVRInput.GetLocalControllerAngularVelocity(OVRInput.GetActiveController()).magnitude.ToString();
-	}
+        //accText.text = "accAccText:" + OVRInput.GetLocalControllerAngularVelocity(OVRInput.GetActiveController()).magnitude.ToString();
+        accText.text = "";
+    }
 
-	public override void LateExecute(float deltaTime) {
+    public override void LateExecute(float deltaTime) {
 		
 	}
 
     public void SetLastAcc(float power) {
-        lastAccText.text = "lastAccText:" + power.ToString();
+        lastAccText.text = "";
     }
 	#endregion Method
 }

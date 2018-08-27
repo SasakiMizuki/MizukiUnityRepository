@@ -36,11 +36,11 @@ public class Target : ObjectBase
     public void OnTriggerEnter(Collider other)
     {
         if (other.tag != "frisbee") return;
-        destroyPart.Play();
+        //destroyPart.Play();
         /*
          * Score.Instance.addScore(100);
          */
-        StartCoroutine(death(5.0f));
+        StartCoroutine(death(0.0f));
     }
 
     public IEnumerator death(float waitTime)

@@ -36,7 +36,8 @@ public class DebugTest : SingletonMonoBehaviour<DebugTest> {
 	void Start () {
 		m_OrderNumber = 0;
 		ObjectManager.Instance.RegistrationList(this, m_OrderNumber);
-	}
+        lastAccText.text = "";
+    }
 	
 	public override void Execute(float deltaTime) {
         //accText.text = "accAccText:" + OVRInput.GetLocalControllerAngularVelocity(OVRInput.GetActiveController()).magnitude.ToString();

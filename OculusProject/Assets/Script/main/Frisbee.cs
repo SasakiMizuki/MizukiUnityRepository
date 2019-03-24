@@ -44,6 +44,8 @@ public class Frisbee : ObjectBase {
 	}
 
     public void init() {
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.Euler(Vector3.zero);
         GetComponent<Rigidbody>().velocity = Vector3.zero;
         GetComponent<Rigidbody>().useGravity = false;
         GetComponent<CapsuleCollider>().enabled = false;
@@ -56,10 +58,6 @@ public class Frisbee : ObjectBase {
         GetComponent<CapsuleCollider>().enabled = true;
         GetComponent<Rigidbody>().useGravity = true;
         GetComponent<Rigidbody>().AddForce(throwVector);
-    }
-
-    private IEnumerator autoDelete() {
-        yield return new WaitForSeconds(10.0f); 
     }
 	#endregion Method
 }
